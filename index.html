@@ -3,7 +3,7 @@
 
 <head>
    <meta charset="utf-8">
-   <title>Add a polygon to a map using a GeoJSON source</title>
+   <title>Mapbox - Desafio front-end</title>
    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,8 +153,7 @@
                })
 
                multiSelection(filter)
-               selectAll(filter)
-               console.log(filter);
+
             })
 
 
@@ -166,8 +165,6 @@
       **********************************************/
       // Disparos ao clicar em alguma layer
       map.on('click', 'shapes', (e) => {
-
-
          // Recuperar todas as props
          const name = e.features[0].properties.nome;
          const area = e.features[0].properties.area;
@@ -176,8 +173,8 @@
          // Centralizar a area clicada no mapa, e temporizar efeito
          map.flyTo({
             center: coordinates[0],
+            zoom: 7,
             speed: 0.4,
-            maxDuration: 2000,
          })
 
          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
@@ -209,6 +206,14 @@
                   </div>
                </div>
             `).addTo(map);
+
+         document.querySelector('.mapboxgl-popup-close-button').addEventListener('click', () => {
+            map.flyTo({
+               center: [-50.50, -16.16],
+               zoom: 5.5,
+               speed: 0.4,
+            })
+         })
       });
 
       // Evento de mousemove vai tirar opacidade da área e colocar o cursor pointer
@@ -306,11 +311,14 @@
 
       function multiSelection(filter) {
          document.querySelectorAll('.selection__list input').forEach(item => {
-            item.checked = true;
             item.addEventListener('change', function (e) {
                if (item.checked) {
-                  filter[1].push(item.parentNode.textContent)
-                  console.log('check');
+                  if (filter.length == 2) {
+                     filter[1].push(item.parentNode.textContent)
+                  } else {
+                     filter = ["all", ["in", "nome"]]
+                     filter[1].push(item.parentNode.textContent)
+                  }
                } else {
                   filter[1].splice(filter[1].indexOf(item.parentNode.textContent), 1)
 
