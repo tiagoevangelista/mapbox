@@ -1,0 +1,207 @@
+@import 'var.css';
+
+/* Mapa e seus controles */
+#map {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   width: 100%;
+}
+
+#menu {
+   position: absolute;
+   background: #efefef;
+   padding: 10px;
+   font-family: 'DM Sans', sans-serif;
+}
+
+/* Reset do mapa */
+.mapboxgl-popup-content {
+   background: initial;
+   border-radius: initial;
+   box-shadow: initial;
+   padding: initial;
+   pointer-events: initial;
+}
+
+.mapboxgl-map {
+   font-family: var(--font-family);
+}
+
+button.mapboxgl-popup-close-button {
+   font-size: var(--size-x5);
+   padding: 0.575rem var(--size-x3);
+   color: #fff;
+   opacity: 0.6;
+   transition: all var(--transition);
+}
+button.mapboxgl-popup-close-button:hover {
+   opacity: 1 !important;
+   background: none !important;
+}
+
+/* Estilos personalizados */
+.popup__wrapper {
+   min-width: 14.25rem;
+   opacity: 0;
+   transform: translateY(50px);
+   background-color: rgb(var(--white));
+   border-radius: var(--size-x1);
+   overflow: hidden;
+   outline: var(--outline);
+   box-shadow: var(--shadow);
+   animation: slideToUp 200ms ease-out 200ms normal both;
+}
+
+.popup__title {
+   background-color: rgb(var(--primary));
+   padding: var(--size-x2) 2.66rem var(--size-x2) var(--size-x5);
+   font-size: var(--size-x3);
+   color: #fff;
+   text-shadow: var(--text-shadow);
+   letter-spacing: 0.66px;
+   box-shadow: 0px 2px 0.25rem rgba(var(--primary), 0.4);
+   text-transform: uppercase;
+}
+
+.popup__item {
+   padding: var(--size-x1) var(--size-x5);
+   color: rgba(var(--green-dark), 0.8);
+}
+.popup__item + .popup__item {
+   border-top: 1px solid rgb(var(--grey));
+}
+
+.popup__heading {
+   font-weight: normal;
+   font-size: var(--size-x3);
+}
+.popup__heading i {
+   font-size: 1rem;
+   color: rgb(var(--green));
+}
+
+.popup__data {
+   font-size: var(--size-x4);
+   font-weight: 600;
+   display: block;
+   margin-top: 0.125rem;
+}
+
+.popup__action {
+}
+
+.popup__action .btn {
+}
+
+.mapboxgl-popup-tip {
+   opacity: 0;
+   transform: translateY(50px);
+   animation: slideToUp 200ms ease-out 200ms normal both;
+}
+
+/* Sidebar */
+.sidebar__wrapper {
+   position: absolute;
+   top: 1rem;
+   left: 1rem;
+   background-color: rgb(var(--white));
+   border-radius: var(--size-x1);
+   overflow: hidden;
+   box-shadow: var(--shadow), 0px 8px 8px -4px rgba(0, 0, 0, 0.16);
+   width: 20rem;
+   max-width: 75%;
+   resize: vertical;
+   height: 55vh;
+   animation: slideToUp 200ms ease-out 200ms normal both;
+}
+
+.sidebar__title {
+   background-color: rgb(var(--primary));
+   padding: var(--size-x2) 2.66rem var(--size-x2) var(--size-x5);
+   font-size: var(--size-x1);
+   text-transform: uppercase;
+   color: #fff;
+   text-shadow: var(--text-shadow);
+   letter-spacing: 0.66px;
+   box-shadow: 0px 2px 0.25rem rgba(var(--primary), 0.4);
+}
+
+.sidebar__title i {
+   font-size: 1rem;
+   opacity: 0.5;
+   margin-right: 0.5rem;
+   vertical-align: -1px;
+   font-weight: 600;
+}
+
+.selection__actions {
+   display: flex;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.selection__list {
+   overflow: auto;
+   max-height: 55vh;
+}
+
+.selection__list label {
+   display: block;
+   background-color: rgba(var(--grey), 0.5);
+   padding: var(--size-x3);
+   cursor: pointer;
+   font-size: var(--size-x2);
+   font-weight: 500;
+   overflow: hidden;
+   transition: all var(--transition);
+}
+.selection__list label:hover {
+   background-color: rgba(var(--grey), 0.8);
+   padding: var(--size-x3);
+   cursor: pointer;
+}
+.selection__list input[type='checkbox'] {
+   opacity: 0.75;
+   transition: all var(--transition);
+}
+
+.selection__list input[type='checkbox'] {
+   filter: hue-rotate(226deg);
+   margin-right: var(--size-x1);
+   height: var(--size-x3);
+   width: var(--size-x3);
+   vertical-align: -2px;
+}
+.selection__list input:checked {
+   box-shadow: 0 0 0 30rem #80ccff25;
+}
+
+.selection__actions a {
+   display: flex;
+   align-items: center;
+   flex: 1 0 50%;
+   font-size: var(--size-x1);
+   color: rgba(0, 0, 0, 0.8);
+   text-align: center;
+   padding: var(--size-x3) var(--size-x1);
+}
+.selection__actions a + a {
+   border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+.selection__actions a:hover {
+   background-color: rgba(var(--grey), 0.5);
+   color: #000;
+}
+
+.selection__actions svg {
+   vertical-align: middle;
+   opacity: 0.5;
+   margin-right: 0.5rem;
+}
+
+/* Menu */
+#menu {
+   opacity: 0;
+   position: relative;
+   z-index: -2;
+}

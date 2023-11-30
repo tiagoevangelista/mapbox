@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <title>Add a polygon to a map using a GeoJSON source</title>
+   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+
+   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+
+   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v5.15.4/css/all.css">
+
+   <link rel="stylesheet" href="gerais.css">
+   <link rel="stylesheet" href="mapa.css">
+
+   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+   <div id="map"></div>
+
+   <div id="sidebar" class="sidebar__wrapper">
+      <div class="sidebar__title">
+         <h2>
+            <i class="fas fa-globe-americas"></i>
+            <span>Áreas disponíveis</span>
+         </h2>
+      </div>
+      <div class="selection__actions">
+         <a href="javascript:void(0)" id="btn-select-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
+               <path fill="#000" d="m9.531 9.531 4-4-.003-.003a.75.75 0 0 0-1.06-1.06L9 7.942 7.531 6.47a.75.75 0 0 0-1.06 1.06l2 2a.747.747 0 0 0 1.06 0Z" />
+               <path fill="#000" fill-rule="evenodd" d="M5 0C3.897 0 3 .897 3 2v1H2C.897 3 0 3.897 0 5v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-1h1c1.103 0 2-.897 2-2V2c0-1.103-.897-2-2-2H5Zm-.5 2c0-.275.225-.5.5-.5h10c.275 0 .5.225.5.5v10c0 .275-.225.5-.5.5H5a.501.501 0 0 1-.5-.5V2Zm8 12H5c-1.103 0-2-.897-2-2V4.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1Z" clip-rule="evenodd" />
+            </svg>
+            <span>Selecionar todos</span>
+         </a>
+         <a href="javascript:void(0)" id="btn-unselect-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
+               <path fill="#000" d="M5 1.5c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5V2c0-.275-.225-.5-.5-.5H5ZM3 2c0-1.103.897-2 2-2h10c1.103 0 2 .897 2 2v10c0 1.103-.897 2-2 2H5c-1.103 0-2-.897-2-2V2Z" />
+               <path fill="#000" fill-rule="evenodd" d="M0 5c0-1.103.897-2 2-2h1v1.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1H14v1c0 1.103-.897 2-2 2H2c-1.103 0-2-.897-2-2V5Z" clip-rule="evenodd" />
+            </svg>
+            <span>Remover seleções</span>
+         </a>
+      </div>
+      <ul class="selection__list" id="available-areas">
+         <!-- A lista será renderizada aqui -->
+      </ul>
+   </div>
+
+   <div id="menu">
+      <input id="satellite-streets-v12" type="radio" name="rtoggle" value="satellite" checked="checked">
+      <label for="satellite-streets-v12">satellite streets</label>
+      <input id="light-v11" type="radio" name="rtoggle" value="light">
+      <label for="light-v11">light</label>
+      <input id="dark-v11" type="radio" name="rtoggle" value="dark">
+      <label for="dark-v11">dark</label>
+      <input id="streets-v12" type="radio" name="rtoggle" value="streets">
+      <label for="streets-v12">streets</label>
+      <input id="outdoors-v12" type="radio" name="rtoggle" value="outdoors">
+      <label for="outdoors-v12">outdoors</label>
+   </div>
+
+   <script>
+      /* INIT
+      **********************************************/
+      mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnbWEtZ2VvdGVjbm9sb2dpYXMiLCJhIjoiY2xmdjM4cXR5MDBndzN0bGliZmJob25lMSJ9.beIudu8ylki09MA4lM7_VQ';
+
+      const map = new mapboxgl.Map({
+         container: 'map',
+         style: 'mapbox://styles/mapbox/satellite-streets-v12',
+         center: [-50.50, -16.16],
+         zoom: 5.5,
+         language: 'pt'
+      });
+
+      // inicializada pra uso no hover e listagem das layers posterioemente
+      let hoveredArea = null;
+      var filter = ["all", ["in", "nome"]];
+
+      // classe necessária para conseguir manter as layers após a troca dinâmica do estilo de mapa
+      function initLayersandFeatures() {
+         fetch('./area_estudo_desafio.json').then(res => res.json()).then(res => {
+            map.addSource('sigma', {
+               'type': 'geojson',
+               'data': res
+            });
+
+            map.addLayer({
+               'id': 'shapes',
+               'type': 'fill',
+               'source': 'sigma',
+               'layout': {},
+               'paint': {
+                  'fill-color': '#FFF',
+                  'fill-opacity': [
+                     'case',
+                     ['boolean', ['feature-state', 'hover'], false],
+                     0.75,
+                     0.50
+                  ]
+               }
+            });
+
+            map.addLayer({
+               'id': 'borders',
+               'type': 'line',
+               'source': 'sigma',
+               'layout': {},
+               'paint': {
+                  'line-color': '#FFF',
+                  'line-width': 1.5,
+                  'line-gap-width': 0,
+                  'line-opacity': 0.5
+               }
+            });
+
+            // Ao carregar o Mapa, faço a listagem dos itens no sidebar
+            map.on('load', () => {
+               let shapesList = map.querySourceFeatures('sigma', {
+                  'sourceLayer': 'shapes'
+               });
+
+               let uniqueShape = getEachShape(shapesList);
+
+               uniqueShape.forEach((shape, index) => {
+                  const li = document.createElement('li');
+
+                  const label = document.createElement('label');
+                  label.setAttribute('for', 'selection__item--' + shape.id)
+                  label.textContent = shape.properties['nome']
+
+                  const checkbox = document.createElement('input');
+                  checkbox.setAttribute('type', 'checkbox')
+                  checkbox.setAttribute('name', 'available-areas')
+                  checkbox.setAttribute('id', 'selection__item--' + shape.id)
+
+                  label.prepend(checkbox)
+                  li.appendChild(label)
+                  document.getElementById('available-areas').appendChild(li)
+               });
+
+               // inicializar com todos o items selecionados
+
+               document.getElementById("btn-select-all").addEventListener('click', function () {
+                  selectAll(filter);
+               })
+               document.getElementById("btn-unselect-all").addEventListener('click', function () {
+                  removeAllSelection(filter);
+                  console.log(filter);
+               })
+
+               multiSelection(filter)
+               selectAll(filter)
+               console.log(filter);
+            })
+
+
+            //TODO: Fazer aparecer com um slide par direita depois de carregados os itens
+         })
+      }
+
+      /* EVENTOS
+      **********************************************/
+      // Disparos ao clicar em alguma layer
+      map.on('click', 'shapes', (e) => {
+
+
+         // Recuperar todas as props
+         const name = e.features[0].properties.nome;
+         const area = e.features[0].properties.area;
+         const coordinates = e.features[0].geometry.coordinates[0];
+
+         // Centralizar a area clicada no mapa, e temporizar efeito
+         map.flyTo({
+            center: coordinates[0],
+            speed: 0.4,
+            maxDuration: 2000,
+         })
+
+         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+         }
+
+         // Abrir popup
+         // Converter a prop 'area' para hectares
+         const popup = new mapboxgl.Popup()
+            .setLngLat(coordinates[0])
+            .setHTML(`
+               <div class="popup__wrapper">
+                  <div class="popup__title">
+                     <h2>${name}</h2>
+                  </div>
+                  <ul class="popup__info">
+                     <li class="popup__item">
+                        <h3 class="popup__heading">
+                           <i class="fas fa-vector-square"></i>
+                           <span>Área</span>
+                        </h3>
+                        <span class="popup__data">
+                           ${(area / 100).toLocaleString('pt-BR', { style: 'unit', unit: 'hectare', maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+                        </span>
+                     </li>
+                  </ul>
+                  <div class="popup__action">
+                     <a class="btn btn--sugar-cane">Exibir detalhes</a>
+                  </div>
+               </div>
+            `).addTo(map);
+      });
+
+      // Evento de mousemove vai tirar opacidade da área e colocar o cursor pointer
+      map.on('mousemove', 'shapes', (e) => {
+         if (e.features.length > 0) {
+            if (hoveredArea !== null) {
+               map.setFeatureState(
+                  { source: 'sigma', id: hoveredArea },
+                  { hover: false }
+               );
+            }
+            hoveredArea = e.features[0].id;
+            map.setFeatureState(
+               { source: 'sigma', id: hoveredArea },
+               { hover: true }
+            );
+         }
+
+         map.getCanvas().style.cursor = 'pointer'
+      });
+
+      // Remove o estilo dado no hover
+      map.on('mouseleave', 'shapes', () => {
+         if (hoveredArea !== null) {
+            map.setFeatureState(
+               { source: 'sigma', id: hoveredArea },
+               { hover: false }
+            );
+         }
+         hoveredArea = null;
+      });
+
+      // cursor padrao vai ser o grab
+      map.on('mouseleave', 'shapes', () => map.getCanvas().style.cursor = '');
+
+      /* CONTROLES 
+      **********************************************/
+      // Escala de referência em km na parte inferior esquerda
+      map.addControl(new mapboxgl.ScaleControl({
+         maxWidth: 80,
+         unit: 'metric'
+      }));
+
+      // Controles de navegacao, e.g. zoom e bussola
+      map.addControl(new mapboxgl.NavigationControl());
+
+      // Possibilitar mudança do estilo de mapa
+      const layerList = document.getElementById('menu');
+      const inputs = layerList.getElementsByTagName('input');
+
+      for (const input of inputs) {
+         input.onclick = (layer) => {
+            const layerId = layer.target.id;
+            const colorsSchema = {
+               satellite: {
+                  fillColor: '#000000',
+                  lineColor: '#FFFFFF'
+               },
+               light: {
+                  fillColor: 'rgba(0,0,0,.5)',
+                  lineColor: 'rgba(0,0,0,.5)'
+               },
+               dark: {
+                  fillColor: '#FFFFFF',
+                  lineColor: '#FFFFFF'
+               },
+            }
+            map.setStyle('mapbox://styles/mapbox/' + layerId);
+
+            switch (true) {
+               case layerId.indexOf('satellite') >= 0: map.setPaintProperty('shapes', 'fill-color', colorsSchema.satellite.fillColor);
+                  break;
+               case layerId.indexOf('light') >= 0: map.setPaintProperty('shapes', 'fill-color', colorsSchema.satellite.fillColor);
+                  break;
+               default: alert('def')
+            }
+         };
+      }
+
+      /* LISTAGEM
+      **********************************************/
+      // necessário fazer uma filtragem pelos IDs porque as features são duplicadas internamente pelo Mapbox
+      function getEachShape(features) {
+         const uniqueIds = new Set();
+         const uniqueFeatures = [];
+         for (const feature of features) {
+            const id = feature['id'];
+            if (!uniqueIds.has(id)) {
+               uniqueIds.add(id);
+               uniqueFeatures.push(feature);
+            }
+         }
+         return uniqueFeatures;
+      }
+
+      function multiSelection(filter) {
+         document.querySelectorAll('.selection__list input').forEach(item => {
+            item.checked = true;
+            item.addEventListener('change', function (e) {
+               if (item.checked) {
+                  filter[1].push(item.parentNode.textContent)
+                  console.log('check');
+               } else {
+                  filter[1].splice(filter[1].indexOf(item.parentNode.textContent), 1)
+
+                  // se diminuir disso disso é sinal de que a seleção tá zerada
+                  if (filter[1].length < 3) {
+                     filter = ["all"]
+                     map.setFilter('shapes', filter)
+                     return;
+                  }
+               }
+               map.setFilter('shapes', filter)
+            })
+         })
+      }
+
+      function removeAllSelection(filter) {
+         document.querySelectorAll('.selection__list input').forEach(item => {
+            item.checked = false
+         })
+         filter[1] = ["all"]
+         map.setFilter('shapes', filter)
+      }
+
+      function selectAll(filter) {
+         document.querySelectorAll('.selection__list input').forEach(item => {
+            item.checked = true;
+            filter[1].push(item.parentNode.textContent)
+         })
+      }
+
+
+      /* QUE OS JOGOS COMECEM :)
+      **********************************************/
+      map.on('style.load', () => {
+         initLayersandFeatures();
+      });
+   </script>
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+/* Variaveis globais */
+:root {
+   /* cores */
+   --primary: 76, 107, 7; /* #4C6B07 */
+   --sugar-cane: 238, 239, 223; /* #EEEFDF */
+   --white: 251, 251, 247; /* #FBFBF7 */
+   --grey: 226, 227, 224; /* #E3E4E1 */
+   --green: 129, 165, 52; /* #81A534 */
+   --green-dark: 49, 69, 4; /* #314504 */
+
+   /* tamanhos */
+   --size-x1: 0.78125rem; /* 12px */
+   --size-x2: 0.875rem; /* 14px */
+   --size-x3: 0.9375rem; /* 15px */
+   --size-x4: 1.125rem; /* 18px */
+   --size-x5: 1.3125rem; /* 21px */
+
+   /* textos */
+   --font-family: 'DM Sans', 'Segoe UI', sans-serif;
+   --text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+
+   /* bordas */
+   --radius: var(--size-x1);
+   --radius-inner: 0.625rem; /* 10px */
+   --outline: 0.25rem solid rgba(255, 255, 255, 0.25);
+
+   /* efeitos */
+   --transition: 150ms ease;
+   --shadow: 0px 0px 1rem 0px rgba(18, 36, 25, 0.4);
+}

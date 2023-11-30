@@ -1,0 +1,94 @@
+@import 'var.css';
+
+/* Alguns resets */
+body {
+   font-family: var(--font-family);
+}
+
+*,
+*::before,
+*::after {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+}
+
+a {
+   text-decoration: none;
+   transition: all var(--transition);
+}
+
+ul,
+li {
+   list-style: none;
+}
+
+h1,
+h2,
+h3 {
+   font-size: inherit;
+   font-weight: 600;
+}
+
+button,
+input,
+label {
+   font-family: var(--font-family);
+}
+
+/* Cores */
+.bg-primary {
+   background-color: rgb(var(--primary));
+}
+
+.bg-sugar-cane {
+   background-color: rgb(var(--sugar-cane));
+}
+
+.bg-white {
+   background-color: rgb(var(--white));
+}
+
+.bg-grey {
+   background-color: rgb(var(--grey));
+}
+
+.text-primary {
+   color: rgb(var(--primary));
+}
+
+.text-sugar-cane {
+   color: rgb(var(--sugar-cane));
+}
+
+.text-white {
+   color: rgb(var(--white));
+}
+
+.text-grey {
+   color: rgb(var(--grey));
+}
+
+/* Botoes */
+.btn {
+   display: block;
+   cursor: pointer;
+   border: none;
+   text-align: center;
+   padding: var(--size-x4);
+   font-size: var(--size-x3);
+   font-weight: 500;
+}
+
+.btn--sugar-cane {
+   background-color: rgb(var(--sugar-cane));
+   color: #656f50;
+}
+
+/* Animacoes */
+@keyframes slideToUp {
+   to {
+      opacity: 1;
+      transform: translateY(0px);
+   }
+}
