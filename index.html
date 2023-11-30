@@ -363,11 +363,16 @@
 
    <script>
       // script não relacionado ao mapa
+      // aqui vou permitir que o browser recalcule o height da lista se o wrapper for redimensionado
       document.addEventListener("DOMContentLoaded", () => {
-         let sideWrapperHeight = document.querySelector('.sidebar__wrapper').clientHeight;
+         let sideWrapper = document.querySelector('.sidebar__wrapper');
          let sideTitleHeight = document.querySelector('.sidebar__title').clientHeight;
          let sideActionHeight = document.querySelector('.selection__actions').clientHeight;
-         document.querySelector('.selection__list').style.height = sideWrapperHeight - sideTitleHeight - sideActionHeight + "px"
+         document.querySelector('.selection__list').style.height = sideWrapper.clientHeight - sideTitleHeight - sideActionHeight + "px";
+
+         new ResizeObserver(() => {
+            document.querySelector('.selection__list').style.height = sideWrapper.clientHeight - sideTitleHeight - sideActionHeight + "px";
+         }).observe(sideWrapper);
       })
    </script>
 

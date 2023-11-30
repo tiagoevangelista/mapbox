@@ -154,7 +154,6 @@ button.mapboxgl-popup-close-button:hover {
 
 .selection__list {
    overflow: auto;
-   max-height: 55vh;
 }
 
 .selection__list label {
