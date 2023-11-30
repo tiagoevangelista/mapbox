@@ -32,15 +32,15 @@
       <div class="selection__actions">
          <a href="javascript:void(0)" id="btn-select-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
-               <path fill="#000" d="m9.531 9.531 4-4-.003-.003a.75.75 0 0 0-1.06-1.06L9 7.942 7.531 6.47a.75.75 0 0 0-1.06 1.06l2 2a.747.747 0 0 0 1.06 0Z" />
-               <path fill="#000" fill-rule="evenodd" d="M5 0C3.897 0 3 .897 3 2v1H2C.897 3 0 3.897 0 5v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-1h1c1.103 0 2-.897 2-2V2c0-1.103-.897-2-2-2H5Zm-.5 2c0-.275.225-.5.5-.5h10c.275 0 .5.225.5.5v10c0 .275-.225.5-.5.5H5a.501.501 0 0 1-.5-.5V2Zm8 12H5c-1.103 0-2-.897-2-2V4.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1Z" clip-rule="evenodd" />
+               <path fill="darkgreen" d="m9.531 9.531 4-4-.003-.003a.75.75 0 0 0-1.06-1.06L9 7.942 7.531 6.47a.75.75 0 0 0-1.06 1.06l2 2a.747.747 0 0 0 1.06 0Z" />
+               <path fill="darkgreen" fill-rule="evenodd" d="M5 0C3.897 0 3 .897 3 2v1H2C.897 3 0 3.897 0 5v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-1h1c1.103 0 2-.897 2-2V2c0-1.103-.897-2-2-2H5Zm-.5 2c0-.275.225-.5.5-.5h10c.275 0 .5.225.5.5v10c0 .275-.225.5-.5.5H5a.501.501 0 0 1-.5-.5V2Zm8 12H5c-1.103 0-2-.897-2-2V4.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1Z" clip-rule="evenodd" />
             </svg>
             <span>Selecionar todos</span>
          </a>
          <a href="javascript:void(0)" id="btn-unselect-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
-               <path fill="#000" d="M5 1.5c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5V2c0-.275-.225-.5-.5-.5H5ZM3 2c0-1.103.897-2 2-2h10c1.103 0 2 .897 2 2v10c0 1.103-.897 2-2 2H5c-1.103 0-2-.897-2-2V2Z" />
-               <path fill="#000" fill-rule="evenodd" d="M0 5c0-1.103.897-2 2-2h1v1.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1H14v1c0 1.103-.897 2-2 2H2c-1.103 0-2-.897-2-2V5Z" clip-rule="evenodd" />
+               <path fill="red" d="M5 1.5c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5V2c0-.275-.225-.5-.5-.5H5ZM3 2c0-1.103.897-2 2-2h10c1.103 0 2 .897 2 2v10c0 1.103-.897 2-2 2H5c-1.103 0-2-.897-2-2V2Z" />
+               <path fill="red" fill-rule="evenodd" d="M0 5c0-1.103.897-2 2-2h1v1.5H2c-.275 0-.5.225-.5.5v10c0 .275.225.5.5.5h10c.275 0 .5-.225.5-.5v-1H14v1c0 1.103-.897 2-2 2H2c-1.103 0-2-.897-2-2V5Z" clip-rule="evenodd" />
             </svg>
             <span>Remover seleções</span>
          </a>
@@ -78,7 +78,7 @@
 
       // inicializada pra uso no hover e listagem das layers posterioemente
       let hoveredArea = null;
-      var filter = ["all", ["in", "nome"]];
+      let filter = ["all", ["in", "nome"]];
 
       // classe necessária para conseguir manter as layers após a troca dinâmica do estilo de mapa
       function initLayersandFeatures() {
@@ -144,12 +144,11 @@
 
                // inicializar com todos o items selecionados
 
-               document.getElementById("btn-select-all").addEventListener('click', function () {
+               document.getElementById("btn-select-all").addEventListener('click', () => {
                   selectAll(filter);
                })
-               document.getElementById("btn-unselect-all").addEventListener('click', function () {
+               document.getElementById("btn-unselect-all").addEventListener('click', () => {
                   removeAllSelection(filter);
-                  console.log(filter);
                })
 
                multiSelection(filter)
@@ -329,6 +328,7 @@
                      return;
                   }
                }
+               console.log(filter);
                map.setFilter('shapes', filter)
             })
          })
@@ -338,8 +338,9 @@
          document.querySelectorAll('.selection__list input').forEach(item => {
             item.checked = false
          })
-         filter[1] = ["all"]
+         filter[1].splice(2)
          map.setFilter('shapes', filter)
+
       }
 
       function selectAll(filter) {
