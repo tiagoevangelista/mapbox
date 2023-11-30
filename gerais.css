@@ -92,3 +92,9 @@ label {
       transform: translateY(0px);
    }
 }
+
+@keyframes spin {
+   to {
+      transform: rotate(360deg);
+   }
+}
