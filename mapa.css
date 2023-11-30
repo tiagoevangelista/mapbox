@@ -114,6 +114,7 @@ button.mapboxgl-popup-close-button:hover {
    height: 52vh;
    min-height: 20rem;
    resize: vertical;
+   transition: var(--transition);
    animation: slideToUp 200ms ease-out 200ms normal both;
 }
 
@@ -135,6 +136,7 @@ button.mapboxgl-popup-close-button:hover {
    text-transform: uppercase;
    color: #fff;
    text-shadow: var(--text-shadow);
+   transition: var(--transition);
    letter-spacing: 0.66px;
    box-shadow: 0px 2px 0.25rem rgba(var(--primary), 0.4);
 }
@@ -145,6 +147,30 @@ button.mapboxgl-popup-close-button:hover {
    margin-right: 0.5rem;
    vertical-align: -1px;
    font-weight: 600;
+}
+
+#toggleMenu {
+   position: absolute;
+   right: 0;
+   top: 0;
+   cursor: pointer;
+   z-index: 1000;
+   overflow: hidden;
+   transition: var(--transition);
+   border-radius: 5rem;
+}
+
+#toggleMenu .show {
+   color: rgb(var(--primary));
+   display: none;
+}
+
+#toggleMenu i {
+   padding: var(--size-x2) 0.666rem;
+   transition: var(--transition);
+}
+#toggleMenu i:hover {
+   opacity: 1;
 }
 
 .selection__actions {
@@ -209,6 +235,65 @@ button.mapboxgl-popup-close-button:hover {
    vertical-align: middle;
    opacity: 0.5;
    margin-right: 0.5rem;
+}
+
+.sidebar__wrapper.sidebar--closed {
+   max-height: 3rem;
+   min-height: 3rem;
+   max-width: 3rem;
+   resize: none;
+   border-radius: 45px;
+}
+
+.sidebar__wrapper.sidebar--closed .sidebar__title {
+   background: #fff;
+}
+.sidebar__wrapper.sidebar--closed .sidebar__title h2 {
+   opacity: 0;
+}
+
+.sidebar__wrapper.sidebar--closed .hide {
+   display: none;
+}
+.sidebar__wrapper.sidebar--closed .show {
+   display: block !important;
+   color: rgb(var(--green));
+   width: 3rem;
+   height: 3rem;
+   line-height: 1.25rem;
+   text-align: center;
+   margin: 0 auto;
+   opacity: 1;
+}
+.sidebar__wrapper.sidebar--closed {
+   max-height: 3rem;
+   min-height: 3rem;
+   max-width: 3rem;
+   transition: 0.2s ease;
+   resize: none;
+   border-radius: 45px;
+}
+
+.sidebar__wrapper.sidebar--closed .sidebar__title {
+   background: #fff;
+   transition: 0.2s ease;
+}
+
+#toggleMenu {
+   z-index: 1000;
+}
+.sidebar__wrapper.sidebar--closed .hide {
+   display: none;
+}
+.sidebar__wrapper.sidebar--closed .show {
+   display: block !important;
+   color: black;
+   width: 3rem;
+   height: 3rem;
+   font-size: 1.25rem;
+   line-height: 1.25rem;
+   text-align: center;
+   margin: 0 auto;
 }
 
 /* Menu */

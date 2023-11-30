@@ -25,6 +25,10 @@
    <div id="sidebar" class="sidebar__wrapper">
       <i class="fas fa-spinner loading-pattern"></i>
       <div class="sidebar__title">
+         <div id="toggleMenu">
+            <i class="far fa-times hide"></i>
+            <i class="far fa-bars show"></i>
+         </div>
          <h2>
             <i class="fas fa-globe-americas"></i>
             <span>Áreas disponíveis</span>
@@ -363,16 +367,32 @@
 
    <script>
       // script não relacionado ao mapa
-      // aqui vou permitir que o browser recalcule o height da lista se o wrapper for redimensionado
       document.addEventListener("DOMContentLoaded", () => {
          let sideWrapper = document.querySelector('.sidebar__wrapper');
          let sideTitleHeight = document.querySelector('.sidebar__title').clientHeight;
          let sideActionHeight = document.querySelector('.selection__actions').clientHeight;
          document.querySelector('.selection__list').style.height = sideWrapper.clientHeight - sideTitleHeight - sideActionHeight + "px";
 
+         // aqui vou permitir que o browser recalcule o height da lista se o wrapper for redimensionado
          new ResizeObserver(() => {
             document.querySelector('.selection__list').style.height = sideWrapper.clientHeight - sideTitleHeight - sideActionHeight + "px";
          }).observe(sideWrapper);
+
+         // toggle do menu de seleção
+         document.querySelector('#toggleMenu').onclick = () => {
+            sideWrapper.classList.toggle('sidebar--closed')
+         }
+
+         // iniciar fechado o menu em mobile
+         if (window.innerWidth < 768) {
+            sideWrapper.classList.add('sidebar--closed')
+
+            // ao mover o dedo no mapa, o menu fecha pra não atrapalhar
+            document.querySelector('canvas').ontouchstart = () => {
+               sideWrapper.classList.add('sidebar--closed')
+            }
+         }
+
       })
    </script>
 
